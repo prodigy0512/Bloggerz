@@ -72,6 +72,28 @@ app.get("/blogs/:id", function(req, res){
 	})
 });
 
+// UPDATE Route
+app.get("/blogs/:id/edit", function(req, res){
+	Blog.findById(req.params.id, function(err, foundBlog){
+		if(err){
+			console.log("ERROR!!!");
+		} else {
+			res.render("edit", {foundBlog:foundBlog});
+		}
+	});
+});
+
+app.put("/blogs/:id", function(req, res){
+	req.body.foundBlog.body = req.sanitize(req.body.foundBlog.body);
+	Blog.findOneAndUpdate({_id: req.params.id}, req.body.foundBlog, function(err, updatedBlog){
+		if(err){
+			console.log("ERROR!!!");
+		} else {
+			res.redirect("/blogs/"+req.params.id);
+		}
+	})
+});
+
 // DELETE Route
 app.delete("/blogs/:id", function(req,res){
 	Blog.deleteOne({_id: req.params.id}, function(err, obj){
